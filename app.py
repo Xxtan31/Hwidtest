@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, redirect, url_for, render_template
+from flask import Flask, request, jsonify, redirect, url_for, render_template_string
 import sqlite3
 import uuid
 from urllib.parse import urlencode
@@ -63,18 +63,20 @@ def check_key():
         return jsonify({'valid': False})
 
 # Linkvertise 1 yönlendirme
-@app.route('/linkvertise1')
-def linkvertise1():
+@app.route('/linkvertise_step1')
+def linkvertise_step1():
     user_id = "1208943"
-    target_url = url_for('step1_html', _external=True)
+    hwid = request.args.get('hwid')
+    target_url = url_for('step1_html', hwid=hwid, _external=True)
     linkvertise_url = f"https://link-to.linkvertise.com/{user_id}?{urlencode({'url': target_url})}"
     return redirect(linkvertise_url)
 
 # Linkvertise 2 yönlendirme
-@app.route('/linkvertise2')
-def linkvertise2():
+@app.route('/linkvertise_step2')
+def linkvertise_step2():
     user_id = "1208943"
-    target_url = url_for('step2_html', _external=True)
+    hwid = request.args.get('hwid')
+    target_url = url_for('step2_html', hwid=hwid, _external=True)
     linkvertise_url = f"https://link-to.linkvertise.com/{user_id}?{urlencode({'url': target_url})}"
     return redirect(linkvertise_url)
 
@@ -87,17 +89,79 @@ def anti_bypass():
 @app.route('/step1.html')
 def step1_html():
     hwid = request.args.get('hwid')
-    return render_template('step1.html', hwid=hwid)
+    return render_template_string('''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Linkvertise Step 1</title>
+    </head>
+    <body>
+        <h1>Step 1</h1>
+        <a href="/linkvertise_step1?hwid={{ hwid }}">Proceed to Linkvertise Step 1</a>
+        <br><br>
+        <a href="/step2.html?hwid={{ hwid }}">Next Step</a>
+    </body>
+    </html>
+    ''', hwid=hwid)
 
 @app.route('/step2.html')
 def step2_html():
     hwid = request.args.get('hwid')
-    return render_template('step2.html', hwid=hwid)
+    return render_template_string('''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Linkvertise Step 2</title>
+    </head>
+    <body>
+        <h1>Step 2</h1>
+        <a href="/linkvertise_step2?hwid={{ hwid }}">Proceed to Linkvertise Step 2</a>
+        <br><br>
+        <a href="/generate_key.html?hwid={{ hwid }}">Generate Key</a>
+    </body>
+    </html>
+    ''', hwid=hwid)
 
 @app.route('/generate_key.html')
 def generate_key_html():
     hwid = request.args.get('hwid')
-    return render_template('generate_key.html', hwid=hwid)
+    return render_template_string('''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Generate Key</title>
+    </head>
+    <body>
+        <h1>Generate Key</h1>
+        <input type="hidden" id="hwid" value="{{ hwid }}">
+        <button onclick="generateKey()">Generate Key</button>
+        <p id="keyDisplay"></p>
+        <script>
+            function generateKey() {
+                const hwid = document.getElementById('hwid').value;
+                fetch('/generate_key', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ hwid: hwid })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.key) {
+                        document.getElementById('keyDisplay').innerText = 'Your Key: ' + data.key;
+                    } else {
+                        alert('Error generating key.');
+                    }
+                });
+            }
+        </script>
+    </body>
+    </html>
+    ''', hwid=hwid)
 
 if __name__ == '__main__':
     initialize_database()
