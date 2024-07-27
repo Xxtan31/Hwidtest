@@ -1,56 +1,83 @@
-from flask import Flask, request, jsonify, render_template, redirect
-import random
-import string
-import requests
+from flask import Flask, request, jsonify, redirect
+import sqlite3
+import uuid
+import hashlib
+from urllib.parse import urlencode
 
 app = Flask(__name__)
 
-# Bu sözlük, gerçek uygulamada bir veritabanı ile değiştirilmelidir
-hwid_keys = {}
+# Veritabanı bağlantısı
+def get_db_connection():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
-LINKVERTISE_API_URL = 'https://publisher.linkvertise.com/api/v1/redirect/link/'
-LINKVERTISE_USER_ID = '1208943'  # LinkVertise kullanıcı ID'nizi buraya girin
+# Veritabanı kurulum fonksiyonu
+def initialize_database():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS keys (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            hwid TEXT UNIQUE,
+            key TEXT,
+            link1_done BOOLEAN DEFAULT FALSE,
+            link2_done BOOLEAN DEFAULT FALSE
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
+@app.route('/generate_key', methods=['POST'])
 def generate_key():
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+    hwid = request.json.get('hwid')
+    if not hwid:
+        return jsonify({'error': 'HWID is required!'}), 400
+    
+    key = str(uuid.uuid4())
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO keys (hwid, key) VALUES (?, ?)', (hwid, key))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({'key': key})
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/get-key')
-def get_key():
+@app.route('/check_key', methods=['GET'])
+def check_key():
     hwid = request.args.get('hwid')
     if not hwid:
-        return "HWID is required", 400
+        return jsonify({'error': 'HWID is required!'}), 400
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM keys WHERE hwid = ?', (hwid,))
+    key_row = cursor.fetchone()
+    conn.close()
+    
+    if key_row:
+        return jsonify({'valid': True, 'key': key_row['key']})
+    else:
+        return jsonify({'valid': False})
 
-    # LinkVertise URL'sini oluştur
-    linkvertise_url = f"https://link-to.net/{LINKVERTISE_USER_ID}/dynamic?random=1&to={request.url_root}generate-key?hwid={hwid}"
+@app.route('/linkvertise1', methods=['GET'])
+def linkvertise1():
+    user_id = "1208943"
+    target_url = "YOUR_FIRST_LINKVERTISE_TARGET"
+    linkvertise_url = f"https://publisher.linkvertise.com/api/v1/redirect/link/static/{user_id}?{urlencode({'url': target_url})}"
     return redirect(linkvertise_url)
 
-@app.route('/generate-key')
-def generate_key_route():
-    hwid = request.args.get('hwid')
-    if not hwid:
-        return "HWID is required", 400
+@app.route('/linkvertise2', methods=['GET'])
+def linkvertise2():
+    user_id = "1208943"
+    target_url = "YOUR_SECOND_LINKVERTISE_TARGET"
+    linkvertise_url = f"https://publisher.linkvertise.com/api/v1/redirect/link/static/{user_id}?{urlencode({'url': target_url})}"
+    return redirect(linkvertise_url)
 
-    # LinkVertise tamamlanma kontrolü (gerçek uygulamada API kullanılmalıdır)
-    # Bu örnek her zaman başarılı kabul eder
-    key = generate_key()
-    hwid_keys[hwid] = key
-    return render_template('key_generated.html', key=key)
-
-@app.route('/api/check-key')
-def check_key():
-    key = request.args.get('key')
-    hwid = request.args.get('hwid')
-    if not key or not hwid:
-        return jsonify({"valid": False}), 400
-
-    if hwid in hwid_keys and hwid_keys[hwid] == key:
-        return jsonify({"valid": True})
-    else:
-        return jsonify({"valid": False})
+@app.route('/anti_bypass', methods=['GET'])
+def anti_bypass():
+    return redirect("YOUR_ANTI_BYPASS_URL")
 
 if __name__ == '__main__':
+    initialize_database()
     app.run(debug=True)
