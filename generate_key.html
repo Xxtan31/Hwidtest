@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Key</title>
+</head>
+<body>
+    <h1>Generate Key</h1>
+    <input type="text" id="hwid" placeholder="Enter your HWID">
+    <button onclick="generateKey()">Generate Key</button>
+    <p id="keyDisplay"></p>
+    <script>
+        function generateKey() {
+            const hwid = document.getElementById('hwid').value;
+            fetch('/generate_key', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ hwid: hwid })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.key) {
+                    document.getElementById('keyDisplay').innerText = 'Your Key: ' + data.key;
+                } else {
+                    alert('Error generating key.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
