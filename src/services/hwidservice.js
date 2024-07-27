@@ -12,3 +12,7 @@ exports.checkHWID = (req, res) => {
 exports.setKey = (hwid, key) => {
     hwidKeys[hwid] = key;
 };
+
+exports.getKey = (hwid) => {
+    return hwidKeys[hwid];
+};
