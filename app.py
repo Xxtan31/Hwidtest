@@ -65,7 +65,7 @@ def check_key():
 # Linkvertise 1 yönlendirme
 @app.route('/linkvertise1')
 def linkvertise1():
-    user_id = "YOUR_LINKVERTISE_USER_ID"
+    user_id = "1208943"
     target_url = url_for('step1_html', _external=True)
     linkvertise_url = f"https://link-to.linkvertise.com/{user_id}?{urlencode({'url': target_url})}"
     return redirect(linkvertise_url)
@@ -73,7 +73,7 @@ def linkvertise1():
 # Linkvertise 2 yönlendirme
 @app.route('/linkvertise2')
 def linkvertise2():
-    user_id = "YOUR_LINKVERTISE_USER_ID"
+    user_id = "1208943"
     target_url = url_for('step2_html', _external=True)
     linkvertise_url = f"https://link-to.linkvertise.com/{user_id}?{urlencode({'url': target_url})}"
     return redirect(linkvertise_url)
