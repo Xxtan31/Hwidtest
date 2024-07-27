@@ -3,7 +3,7 @@ const generateRandomKey = require('../utils/keyGenerator');
 const hwidService = require('./hwidService');
 
 const LINKVERTISE_API_URL = 'https://publisher.linkvertise.com/api/v1/redirect/link/';
-const LINKVERTISE_USER_ID = 'YOUR_LINKVERTISE_USER_ID';
+const LINKVERTISE_USER_ID = '1208943';
 
 exports.generateKey = async (req, res) => {
     const hwid = req.query.hwid;
