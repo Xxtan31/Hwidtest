@@ -63,7 +63,7 @@ def check_key():
 @app.route('/linkvertise1', methods=['GET'])
 def linkvertise1():
     user_id = "1208943"
-    target_url = "YOUR_FIRST_LINKVERTISE_TARGET"
+    target_url = "https://link-hub.net/1208943/equinox-hub-key-system"
     linkvertise_url = f"https://publisher.linkvertise.com/api/v1/redirect/link/static/{user_id}?{urlencode({'url': target_url})}"
     return redirect(linkvertise_url)
 
