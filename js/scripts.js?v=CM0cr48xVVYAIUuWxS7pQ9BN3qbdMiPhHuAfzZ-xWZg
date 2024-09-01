@@ -1,0 +1,327 @@
+$(function () {
+
+	/*collapse faq*/
+	$('.card').on('click', function () {
+		$(this).toggleClass('active');
+		$('.card').not($(this)).removeClass('active');
+	});
+
+
+
+	/*slick slider*/
+	$('.r10_slide').slick({
+		infinite: false,
+		slidesToShow: 5,
+		slidesToScroll: 2,
+		prevArrow: '<button type="button" class="slick-prev"><img src="../img/r10_prev.png" alt="" /></button>',
+		nextArrow: '<button type="button" class="slick-next"><img src="../img/r10_next.png" alt="" /></button>',
+		responsive: [
+			{
+				breakpoint: 992,
+				settings: {
+					slidesToShow: 4,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 767,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 576,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 1,
+				}
+			},
+		]
+	});
+
+	$("document").ready(function () {
+
+		$('.anchor').anchor({
+			transitionDuration: 1200
+		});
+
+		
+		
+	});
+});
+
+function changeLang(lang) {
+    $.ajax({
+        url: "/Lang",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify({
+            lang: lang
+        }),
+        type: "POST",
+        success: function (data) {
+            window.location.reload();
+        }
+    });
+}
+
+function getMobileOperatingSystem() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "windows";
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "android";
+    }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "ios";
+    }
+
+    return "android";
+}
+
+function renderButton() {
+
+    setTimeout(function () {
+        gapi.signin2.render('my-signin2', {
+            'scope': 'profile email',
+            'width': 240,
+            'height': 50,
+            'longtitle': true,
+            'theme': 'dark',
+            'onsuccess': onSuccess,
+            'onfailure': onFailure,
+        });
+    }, 500)
+}
+
+function onFailure(error) {
+    console.log(error);
+}
+
+function toTimeLeftText(sec_num) {
+
+    var hours = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours < 10) { hours = "0" + hours; }
+    if (minutes < 10) { minutes = "0" + minutes; }
+    if (seconds < 10) { seconds = "0" + seconds; }
+
+    if (hours == 0) {
+        return minutes + " min.";
+    }
+
+    return hours + 'hrs. ' + minutes + " min.";
+}
+
+function showModal(id) {
+    $("#modal_loading").modal("hide");
+    setTimeout(function () {
+    $(id).modal();
+        $("#modal_loading").modal("hide");
+    }, 500);
+}
+
+function onGameClick(game) {
+    $.ajax({
+        url: "/Admin/LogAction",
+        dataType: "json",
+        contentType: "application/json", 
+        data: JSON.stringify({
+            UserId: null,
+            Action: "game_click?" + game
+        }),
+        type: "POST",
+        success: function (data) {
+
+        }
+    });
+}
+
+function onSuccess(googleUser) {
+
+    console.log(googleUser);
+
+    googleUser.disconnect();
+
+    var profile = googleUser.getBasicProfile();
+
+    console.log(profile);
+
+    doLogin("SingInWithEmail", function (data) {
+        if (data.code == 200) {
+            window.location.href = window.location.href.split("?")[0];
+        }
+        else if (data.code == 404) {
+            showModal("#google_accont_not_found");
+        }
+        else {
+            showModal("#modal_sign_in_error");
+
+            $("#link_device").click(function () {
+                $("#modal_sign_in_error").modal("hide");
+                $("#modal_loading").modal();
+
+                doLogin("LinkDevice", function (d) {
+
+                $("#modal_loading").modal("hide");
+                    if (d.code == 200) {
+                        showModal("#modal_success_link");
+                        setTimeout(function () {window.location.reload(true); }, 2000);
+                    }
+                    else {
+                        showModal("#modal_unknown_error");
+                    }
+                });
+            });
+
+
+            $("#confirm_sign_in").click(function () {
+                $("#modal_sign_in_error").modal("hide");
+                $("#modal_loading").modal();
+                doLogin("ForceSignInWithEmail", function (d) {
+                    console.log(d);
+                    $("#modal_loading").modal("hide");
+                    if (d.code == 200) {
+                        window.location.href = window.location.href.split("?")[0];
+                        showModal("#modal_success_sign_in");
+                    }
+                    else {
+                        showModal("#modal_unknown_error");
+                    }
+                });
+            });
+        }
+        console.log(data);
+    });
+
+    function doLogin(method, callback) {
+    $.ajax({
+        url: "/User/" + method,
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify({
+            email: profile.getEmail(),
+            token: profile.getId()
+        }),
+        type: "POST",
+        success: function (data) {
+            callback(data);
+
+        }
+    });
+    }
+
+}
+
+function showLoadingRing(id) {
+    $(id).html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
+}
+
+
+function post(values, panel, errorText, url, onSuccess) {
+
+    var oldHtml = $(panel).html();
+    showLoadingRing(panel);
+    $(errorText).html("");
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(values),
+        success: function (data) {
+
+            $(panel).html(oldHtml);
+
+            if (data.code == 200) {
+                onSuccess(data);
+            }
+            else {
+                $(errorText).html(data.error);
+            }
+        },
+        error: function (xhr, status, error) {
+
+            $(panel).html(oldHtml);
+            $(errorText).html(error);
+        }
+    });
+}
+
+function get(panel, errorText, url, onSuccess) {
+
+    var oldHtml = $(panel).html();
+    showLoadingRing(panel);
+    $(errorText).html("");
+
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json",
+        success: function (data) {
+
+            $(panel).html(oldHtml);
+
+            if (data.code == 200) {
+                onSuccess(data);
+            }
+            else {
+                $(errorText).html(data.error);
+            }
+        },
+        error: function (xhr, status, error) {
+
+            $(panel).html(oldHtml);
+            $(errorText).html(error);
+        }
+    });
+}
+
+function createAction(inputs, panel, errorText, url, onSuccess, onBeforeSubmit) {
+
+    var values = {};
+
+    for (var i = 0; i < inputs.length; i++) {
+        values[inputs[i]] = $("#" + inputs[i]).val();
+    }
+
+    var oldHtml = $(panel).html();
+    showLoadingRing(panel);
+    $(errorText).html("");
+
+    if (onBeforeSubmit != null) {
+        values = onBeforeSubmit(values);
+    }
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(values),
+        success: function (data) {
+
+            $(panel).html(oldHtml);
+
+            if (data.code == 200) {
+                onSuccess(data);
+            }
+            else {
+                $(errorText).html(data.error);
+            }
+        },
+        error: function (xhr, status, error) {
+
+            $(panel).html(oldHtml);
+            $(errorText).html(error);
+        }
+    });
+}
