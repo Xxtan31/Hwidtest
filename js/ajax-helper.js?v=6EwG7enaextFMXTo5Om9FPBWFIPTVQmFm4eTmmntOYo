@@ -1,0 +1,37 @@
+function loadView(url, elementId, args) {
+    $.ajax({
+        url: url,
+        cache: false,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(args),
+        success: function (data) {
+            $("#" + elementId).html(data);
+        }
+    });
+};
+
+function getPathFromUrl(url) {
+    return url.split(/[?#]/)[0];
+}
+
+function getQuerryArgs(args) {
+    var data = {};
+    const urlParams = new URLSearchParams(window.location.search);
+    for (var i = 0; i < args.length; i++) {
+        data[args[i]] = urlParams.get(args[i]);
+    }
+    return data;
+}
+
+function updateQueryStringParameter(key, value) {
+    var uri = window.location.href;
+    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    if (uri.match(re)) {
+        return uri.replace(re, '$1' + key + "=" + value + '$2');
+    }
+    else {
+        return uri + separator + key + "=" + value;
+    }
+}
