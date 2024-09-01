@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f); })(window, document, 'script', 'dataLayer', 'GTM-5GXPP3G');</script>
+    <!-- End Google Tag Manager -->
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="686482780958-kqdkn6hvqirii9grbm8q1ccc5dq9qt58.apps.googleusercontent.com">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no, shrink-to-fit=no">
+    <meta name="description" content="Earn free robux today by playing games" />
+    <meta name="keywords" content="Free Robux for Roblox platform">
+    <meta property="og:title" content="Roblominer" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="300" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:url" content="https://roblominer.com" />
+    <meta property="og:image" content="https://roblominer.com/img/roblo_skype.png" />
+
+
+    <title>Home</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap&subset=cyrillic" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css?v=xLbtJkVRnsLBKLrbKi53IAUvhEH_qUxPC87KAjEQBNo">
+    <link rel="stylesheet" href="/css/jquery.formstyler.css?v=P34VqBoALg7p6iXwwbYYz23QH9okq0ZOp2gLMTevLfo">
+    <link rel="stylesheet" href="/css/slick.css?v=8LcixIxSCCzXcmFXTiKlJR_jfqSykbFEETQUW6ubIGM">
+    <link rel="stylesheet" href="/css/jquery.fancybox.min.css?v=Vzbj7sDDS_woiFS3uNKo8eIuni59rjyNGtXfstRzStA">
+    <link rel="stylesheet" href="/css/settings.css?v=5IWMPRuU23t7WnpImZZ4fVs49wfGD70opqJvuL0F5jc">
+    <link rel="stylesheet" href="/css/custom_style.css?v=Zux9qdRPNZsLaGDb8yyR-8SMWYBJB6FI-KaXILRk5po">
+    <link rel="stylesheet" href="/css/style.css?v=VCRhbHgVRuK2JSntTBbcpP1vbVH8WhbGQlYWeNoo5PI">
+    <link rel="stylesheet" href="/css/loader.css?v=MrzoefGvmaUUiW1JQOKHYjNXC6f2d01BBgmCstMCT5w">
+
+
+</head>
+
+<body data-gr-c-s-loaded="true" class="English">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GXPP3G" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <header>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="header_logo">
+                <a class="navbar-brand" href="/">
+                    <img src="/img/logo.png" alt="get free robux online">
+                </a>
+                <h2>
+                    MY CABINET
+                </h2>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="header_ul">
+                    <li>
+                        <a href="/#faq_section">
+                            FAQ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/privacy">
+                            PRIVACY
+                        </a>
+                    </li>
+                    <li class="header_ul_li3">
+                        <a href="/games">
+                            GAMES
+                        </a>
+                    </li>
+                    <li class="header_ul_li_last">
+                        <a href="/user">
+                            CABINET
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="header_ul_r">
+                <li>
+                    <a href="#!" onclick="changeLang('English')">
+                        <img src="/img/en.png" alt="English">
+                    </a>
+                </li>
+                <li>
+                    <a href="#!" onclick="changeLang('Russian')">
+                        <img src="/img/ru.png" alt="Русский">
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<section class="cabinet cabinet-v2">
+    <div class="container" id="user_info">
+        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    </div>
+</section>
+
+<script src="/js/jquery-3.2.1.min.js?v=dbcH2HYeK_vSX71mHykKT3_RHEjhv1Ojbca9igA0-jU"></script>
+<script src="/js/ajax-helper.js?v=6EwG7enaextFMXTo5Om9FPBWFIPTVQmFm4eTmmntOYo"></script>
+<script>
+
+
+    (function () {
+
+        loadView("/User/GetLoginPanel", "user_info", getQuerryArgs(['id', 'titleId', 'platform']));
+
+    })();
+
+
+</script>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer_cont d-flex align-items-center justify-content-between">
+                <a href="#!" class="footer_logo">
+                    <img src="/img/footer_logo.png" alt="roblominer free robux for roblox">
+                </a>
+                <div class="footer_cont_c d-flex align-items-center">
+                    <img src="/img/footer_cont_c_img.png" alt="roblominer earn robux for free">
+                    <p>
+                        © 2023. All rights reserved. RobloMiner.<br>
+                        Earn FREE Robux by simply playing games! <br><br>
+                        <a href="/terms-and-conditions">
+                            TERMS AND CONDITIONS
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="/js/jquery-3.2.1.min.js?v=dbcH2HYeK_vSX71mHykKT3_RHEjhv1Ojbca9igA0-jU"></script>
+    <script src="/js/popper.min.js?v=GTqB6HEzcCUKiNsmo7IB35-EHLpKIStWf_mUaTvBvyI"></script>
+    <script src="/js/bootstrap.min.js?v=sAg0wXxQrxA-NT74amnZC7yqgZ7ZK01u1nCkJVFOPDo"></script>
+    <script src="/js/jquery.formstyler.min.js?v=-BItjblwddCTK1IK6Kf0KsJfWrv4UuTVjtKjfSzoj08"></script>
+    <script src="/js/anchor.js?v=DkVK_NgZdyRnja9vFO3nLCmBcN1tY6AGSbraU_aiGV8"></script>
+    <script src="/js/jquery.fancybox.min.js?v=HALK8qDxYxiWVnb9SyZSZXKNZPuieUogsHFRpOiR_KY"></script>
+    <script src="/js/slick.min.js?v=4aUsCgb6n2XgFbAufsRj_WISEanSrkS2ZgWXkA6Sf7s"></script>
+    <script src="/js/scripts.js?v=CM0cr48xVVYAIUuWxS7pQ9BN3qbdMiPhHuAfzZ-xWZg"></script>
+
+
+</body>
+
+</html>
